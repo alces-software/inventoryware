@@ -2,7 +2,7 @@
 
 TARBALL_NAME="gather-data-compressed.tar.gz"
 SCRIPT_NAME="gather-data-selfcontained.sh"
-COMMAND_TO_RUN="gather-data.sh"
+COMMAND_TO_RUN='if [ ! -z $1 ] ; then /tmp/gather-data.sh --name $1 ; else /tmp/gather-data.sh ; fi ; rm -rf /tmp/gather-data.sh /tmp/bin'
 source=$(cd "$(dirname "${BASH_SOURCE[0]}")"/.. && pwd)
 
 if [ $TARBALL_NAME == "" ] ; then

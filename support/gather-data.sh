@@ -31,6 +31,7 @@ print_help() {
     echo ""
     echo "Options:"
     echo "  -h, --help          Show this help page"
+    echo "  -n, --name		Name to be used for exported archive" 
     echo "  -p, --primary       Primary group for the node"
     echo "  -g, --groups        Comma-separated list of secondary groups for the node"
     echo "  -t, --type          Type of check to run (physical or logical), if not provided"
@@ -60,6 +61,17 @@ while test $# -gt 0 ; do
             fi
             shift
             ;;
+	-n|--name)
+	    shift
+	    if test $# -gt 0 ; then
+	    	export NAME=$1
+	    else
+		echo -e "ERROR: No name provided\n"
+		print_help
+		exit 1
+	    fi
+	    shift
+	    ;;
         -g|--groups)
             shift
 
@@ -175,8 +187,13 @@ popd
 #
 ZIPFILE="/tmp/$(hostname -s).zip"
 pushd $TMPDIR
-$ZIP -r $ZIPFILE ./*
+if [ ! -z $NAME ] ; then
+   $ZIP -r /tmp/${NAME}.zip ./*
+   echo "Data written to /tmp/${NAME}.zip"
+else
+   $ZIP -r $ZIPFILE ./*
+   echo "Data written to $ZIPFILE"
+fi
 popd
 
 rm -rf $TMPDIR
-echo "Data written to $ZIPFILE"
